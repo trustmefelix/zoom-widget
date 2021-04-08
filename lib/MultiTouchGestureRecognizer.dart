@@ -1,9 +1,9 @@
-import "package:flutter/gestures.dart";
+import 'package:flutter/gestures.dart';
 
 class MultiTouchGestureRecognizer extends MultiTapGestureRecognizer {
-  MultiTouchGestureRecognizerCallback onMultiTap;
-  SingleTouchGestureRecognizerCallback onSingleTap;
-  Offset firstPoint;
+  late MultiTouchGestureRecognizerCallback? onMultiTap;
+  late SingleTouchGestureRecognizerCallback? onSingleTap;
+  Offset? firstPoint;
   var numberOfTouches = 0;
 
   MultiTouchGestureRecognizer() {
@@ -13,27 +13,27 @@ class MultiTouchGestureRecognizer extends MultiTapGestureRecognizer {
     super.onTap = (pointer) => this.captureDefaultTap(pointer);
   }
 
-  void addTouch(int pointer, TapDownDetails details) {
+  void addTouch(int? pointer, TapDownDetails? details) {
     this.numberOfTouches++;
     if (this.numberOfTouches == 1) {
-      firstPoint = details.localPosition;
-      this.onSingleTap(details.localPosition);
+      firstPoint = details!.localPosition;
+      this.onSingleTap!(details!.localPosition);
     }
 
     if (this.numberOfTouches == 2) {
-      this.onMultiTap(firstPoint, details.localPosition);
+      onMultiTap!(firstPoint, details!.localPosition);
     }
   }
 
-  void removeTouch(int pointer, TapUpDetails details) {
+  void removeTouch(int? pointer, TapUpDetails? details) {
     this.numberOfTouches = 0;
   }
 
-  void cancelTouch(int pointer) {
+  void cancelTouch(int? pointer) {
     this.numberOfTouches = 0;
   }
 
-  void captureDefaultTap(int pointer) {}
+  void captureDefaultTap(int? pointer) {}
 
   @override
   set onTapDown(_onTapDown) {}
@@ -49,5 +49,5 @@ class MultiTouchGestureRecognizer extends MultiTapGestureRecognizer {
 }
 
 typedef MultiTouchGestureRecognizerCallback = void Function(
-    Offset firstPoint, Offset secondPoint);
+    Offset? firstPoint, Offset? secondPoint);
 typedef SingleTouchGestureRecognizerCallback = void Function(Offset point);
